@@ -1,0 +1,21 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "hot_spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "geohash", "order": "ASCENDING" },
+        { "fieldPath": "callScore", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "crowd_pins",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "geohash", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

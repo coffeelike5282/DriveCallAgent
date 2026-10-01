@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. 사용자 컬렉션
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // 2. 황금 콜 스팟 마스터
+    match /hot_spots/{spotId} {
+      allow read, write: if true;
+    }
+
+    // 3. 복귀 성공 핀 (크라우드소싱)
+    match /crowd_pins/{pinId} {
+      allow read, write: if true;
+    }
+
+    // 4. 결제 내역
+    match /payments/{paymentId} {
+      allow read, write: if true;
+    }
+
+    // 5. 심야 버스 레이더 노선
+    match /night_bus_routes/{routeId} {
+      allow read, write: if true;
+    }
+  }
+}
