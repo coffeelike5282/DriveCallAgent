@@ -12,6 +12,7 @@ import { onSnapshot, query, orderBy } from 'firebase/firestore';
 import { hotSpotsCollection } from '@/lib/firebase/collections';
 
 export default function HomePage() {
+  const [mounted, setMounted] = useState<boolean>(false);
   const [membershipTier, setMembershipTier] = useState<MembershipTier>('FREE');
   const [currentLocationName, setCurrentLocationName] = useState<string>(
     '화성 팔탄 · 발리오스CC 클럽하우스'
@@ -19,43 +20,53 @@ export default function HomePage() {
   const [spots, setSpots] = useState<HotSpot[]>([]);
   const [selectedSpot, setSelectedSpot] = useState<HotSpot | null>(null);
 
+  // 클라이언트 마운트 가드 (빌드 타임 SSG 안전성 확보)
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Firestore hot_spots 실시간 연동 (onSnapshot)
   useEffect(() => {
-    const q = query(hotSpotsCollection, orderBy('callScore', 'desc'));
-    const unsubscribe = onSnapshot(
-      q,
-      (snapshot) => {
-        const fetchedSpots: HotSpot[] = snapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            spotName: data.spotName,
-            category: data.category,
-            lat: data.lat,
-            lng: data.lng,
-            geohash: data.geohash,
-            targetHours: data.targetHours,
-            escapeAxis: data.escapeAxis,
-            callScore: data.callScore,
-            isCrowdsourced: data.isCrowdsourced,
-            crowdsourceCount: data.crowdsourceCount,
-            tipDescription: data.tipDescription,
-          };
-        });
+    if (!mounted) return;
 
-        setSpots(fetchedSpots);
-        if (fetchedSpots.length > 0 && !selectedSpot) {
-          // AI 1순위 추천 스팟 자동 선택
-          setSelectedSpot(fetchedSpots[0]);
+    try {
+      const q = query(hotSpotsCollection, orderBy('callScore', 'desc'));
+      const unsubscribe = onSnapshot(
+        q,
+        (snapshot) => {
+          const fetchedSpots: HotSpot[] = snapshot.docs.map((doc) => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              spotName: data.spotName,
+              category: data.category,
+              lat: data.lat,
+              lng: data.lng,
+              geohash: data.geohash,
+              targetHours: data.targetHours,
+              escapeAxis: data.escapeAxis,
+              callScore: data.callScore,
+              isCrowdsourced: data.isCrowdsourced,
+              crowdsourceCount: data.crowdsourceCount,
+              tipDescription: data.tipDescription,
+            };
+          });
+
+          setSpots(fetchedSpots);
+          if (fetchedSpots.length > 0 && !selectedSpot) {
+            setSelectedSpot(fetchedSpots[0]);
+          }
+        },
+        (error) => {
+          console.warn('Firestore hot_spots 구독 경고:', error);
         }
-      },
-      (error) => {
-        console.error('Firestore hot_spots 구독 에러:', error);
-      }
-    );
+      );
 
-    return () => unsubscribe();
-  }, []);
+      return () => unsubscribe();
+    } catch (err) {
+      console.warn('Firestore 초기화 경고:', err);
+    }
+  }, [mounted, selectedSpot]);
 
   // 내 위치 재탐색 핸들러
   const handleRecenter = () => {
