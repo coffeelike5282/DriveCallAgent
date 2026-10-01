@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "deploy": "npx wrangler pages deploy out --project-name=callnavi",
     "start": "next start",
     "lint": "eslint"
   },
