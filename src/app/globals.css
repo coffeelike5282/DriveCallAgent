@@ -29,3 +29,43 @@ body {
 ::-webkit-scrollbar {
   display: none;
 }
+
+/* ========================================================
+ * 카카오맵 AMOLED Black 야간 다크모드 스타일링 (기획서 5.1)
+ * ======================================================== */
+.kakao-dark-map {
+  background-color: #050505 !important;
+}
+
+/* 카카오맵 타일 이미지 반전 및 고대비 다크 톤 필터 적용 */
+.kakao-dark-map img[src*="daumcdn.net"],
+.kakao-dark-map img[src*="kakaocdn.net"],
+.kakao-dark-map div[style*="background-image"] {
+  filter: invert(93%) hue-rotate(180deg) brightness(88%) contrast(125%) saturate(80%) !important;
+}
+
+/* 커스텀 오버레이 마커 및 인포윈도우는 필터 제외 (원색 유지) */
+.kakao-dark-map .custom-overlay-marker,
+.kakao-dark-map .custom-pulse-marker {
+  filter: none !important;
+}
+
+/* 레이더 펄스 마커 애니메이션 */
+@keyframes radar-pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.radar-ring {
+  animation: radar-pulse 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}

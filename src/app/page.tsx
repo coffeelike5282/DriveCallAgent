@@ -20,6 +20,13 @@ export default function HomePage() {
   const [spots, setSpots] = useState<HotSpot[]>([]);
   const [selectedSpot, setSelectedSpot] = useState<HotSpot | null>(null);
 
+  // 기사 기본 현재 위치 (화성 팔탄 발리오스CC)
+  const currentCoords = {
+    lat: 37.1512,
+    lng: 126.9038,
+    name: currentLocationName,
+  };
+
   // 클라이언트 마운트 가드 (빌드 타임 SSG 안전성 확보)
   useEffect(() => {
     setMounted(true);
@@ -54,6 +61,7 @@ export default function HomePage() {
 
           setSpots(fetchedSpots);
           if (fetchedSpots.length > 0 && !selectedSpot) {
+            // AI 1순위 추천 스팟 자동 선택
             setSelectedSpot(fetchedSpots[0]);
           }
         },
@@ -70,7 +78,7 @@ export default function HomePage() {
 
   // 내 위치 재탐색 핸들러
   const handleRecenter = () => {
-    alert('📍 현위치(발리오스CC 클럽하우스)로 지도를 재정렬합니다.');
+    console.log('📍 현위치로 지도를 재정렬합니다.');
   };
 
   // 심야 버스 레이더 토글 핸들러
@@ -92,8 +100,12 @@ export default function HomePage() {
         gpsActive={true}
       />
 
-      {/* 2. 메인 맵 영역 (실시간 맵, 버스 폴리라인, 플로팅 컨트롤) */}
+      {/* 2. 메인 맵 영역 (카카오맵 Web SDK 연동, 마커, 버스 폴리라인, 플로팅 컨트롤) */}
       <MapContainer
+        spots={spots}
+        selectedSpot={selectedSpot}
+        onSelectSpot={setSelectedSpot}
+        currentLocation={currentCoords}
         onRecenter={handleRecenter}
         onToggleBusRadar={handleToggleBusRadar}
       />
