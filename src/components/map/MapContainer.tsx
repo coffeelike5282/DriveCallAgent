@@ -67,6 +67,11 @@ export default function MapContainer({
 
     mapInstanceRef.current = map;
 
+    // 모바일 Flex 컨테이너 레이아웃 안정화 후 지도 크기 재계산
+    setTimeout(() => {
+      map.relayout();
+    }, 150);
+
     // 리사이즈 시 지도 크기 재계산
     const handleResize = () => map.relayout();
     window.addEventListener('resize', handleResize);

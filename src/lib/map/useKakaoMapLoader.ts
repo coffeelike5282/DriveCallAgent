@@ -25,9 +25,11 @@ export function useKakaoMapLoader(): UseKakaoMapLoaderResult {
       return;
     }
 
-    const appKey = process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY;
+    const appKey =
+      process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY ||
+      '36619c5b804b122f1a33129df2da2621';
 
-    // 키가 설정되지 않았거나 더미 키인 경우
+    // 키가 설정되지 않은 경우
     if (!appKey || appKey === 'dummy_kakao_key') {
       setError('카카오맵 JavaScript 키(NEXT_PUBLIC_KAKAO_MAP_API_KEY)가 등록되지 않았습니다.');
       return;
