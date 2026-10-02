@@ -58,7 +58,9 @@ export function useKakaoMapLoader(): UseKakaoMapLoaderResult {
 
       script.onload = onScriptLoaded;
       script.onerror = () => {
-        setError('카카오맵 SDK 스크립트 다운로드에 실패했습니다. 네트워크 또는 도메인 허용 설정을 확인해 주세요.');
+        const origin = window.location.origin;
+        console.error(`[KakaoMapSDK] 스크립트 로드 실패. 카카오 개발자 콘솔(developers.kakao.com)의 [Web 플랫폼 사이트 도메인]에 '${origin}'이 등록되어 있는지 확인해주세요.`);
+        setError(`카카오맵 SDK 로드 차단 (401 domain mismatched 가능성). 카카오 디벨로퍼스 콘솔의 [Web 플랫폼 사이트 도메인]에 '${origin}'을 등록해 주세요.`);
       };
 
       document.head.appendChild(script);

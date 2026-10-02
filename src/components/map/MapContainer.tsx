@@ -272,14 +272,25 @@ export default function MapContainer({
               </div>
             </div>
 
-            {/* SDK 안내 메시지 (키 미등록 시 친절한 안내) */}
+            {/* SDK 안내 메시지 (키 미등록 또는 도메인 불일치 시 직관적인 안내) */}
             {sdkError && (
-              <div className="absolute top-16 left-3 right-3 z-30 bg-zinc-950/90 border border-amber-500/40 text-amber-200 p-2.5 rounded-xl text-xs flex items-start gap-2 shadow-2xl backdrop-blur-md">
-                <Info className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              <div className="absolute top-16 left-3 right-3 z-30 bg-zinc-950/95 border border-amber-500/50 text-amber-200 p-3 rounded-xl text-xs flex items-start gap-2.5 shadow-2xl backdrop-blur-md">
+                <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <div className="font-bold text-amber-300">카카오맵 SDK 준비 완료</div>
-                  <div className="text-[11px] text-zinc-400 mt-0.5">
-                    카카오 JavaScript 키 등록 시 고정밀 노선 타일이 활성화됩니다.
+                  <div className="font-bold text-amber-300 text-xs">카카오맵 SDK 연동 확인 필요</div>
+                  <div className="text-[11px] text-zinc-300 mt-1 leading-relaxed break-keep">
+                    {sdkError}
+                  </div>
+                  <div className="text-[10px] text-zinc-500 mt-1.5 flex items-center gap-1 font-mono">
+                    <span>도메인 등록:</span>
+                    <a
+                      href="https://developers.kakao.com/console/app"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-amber-400 underline hover:text-amber-300"
+                    >
+                      developers.kakao.com
+                    </a>
                   </div>
                 </div>
               </div>
